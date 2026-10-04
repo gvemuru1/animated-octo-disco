@@ -16,14 +16,14 @@ print("LangChain Google GenAI:", version("langchain-google-genai"))
 
 
 def main():
-    # llmGPT = ChatOpenAI(model="gpt-4o-mini",temperature=0)
-    # res = llmGPT.invoke("Say, setup completed in One go")
-    # print(f"OpenAI: {res.content}")
+    llmGPT = ChatOpenAI(model="gpt-4o-mini",temperature=0)
+    res = llmGPT.invoke("Say, setup completed in One go")
+    print(f"OpenAI: {res.content}")
 
 
-    # llmGemini = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite",temperature=0)
-    # res = llmGemini.invoke("Say, setup completed in One go")
-    # print(f"Gemini: {res}")
+    llmGemini = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite",temperature=0)
+    res = llmGemini.invoke("Say, setup completed in One go")
+    print(f"Gemini: {res}")
 
 
     print("setup complete!")
