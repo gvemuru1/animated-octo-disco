@@ -20,11 +20,9 @@ def main():
     res = llmGPT.invoke("Say, setup completed in One go")
     print(f"OpenAI: {res.content}")
 
-
     llmGemini = ChatGoogleGenerativeAI(model="gemini-3.1-flash-lite",temperature=0)
     res = llmGemini.invoke("Say, setup completed in One go")
     print(f"Gemini: {res}")
-
 
     print("setup complete!")
 
