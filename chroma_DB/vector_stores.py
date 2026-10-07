@@ -1,7 +1,7 @@
 from langchain_openai.embeddings import OpenAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+# from langchain_text_splitters import RecursiveCharacterTextSplitter
 import tempfile
 import shutil
 from dotenv import load_dotenv
@@ -66,7 +66,6 @@ def chroma_basics():
         for i, doc in enumerate(results):
             print(f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']})")
 
-
 def similarity_search_with_scores():
     with tempfile.TemporaryDirectory() as tmpdir:
 
@@ -81,19 +80,51 @@ def similarity_search_with_scores():
         # perform similarity search
         query = "Explain RAG?"
         results = vectorstore.similarity_search_with_score(query, k=2)
+        print("-"*50)
+        print(results[1])
+        print("-"*50)
+        
+
 
         print(f"Top 2 results similarity search with score for query '{query}':")
         for i, (doc,score) in enumerate(results):
             print("-"*50)
-            # simSRC = 1 / (1+score)
-            print(f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']}) (Score: {score:.4f}) )")
+            simSRC = 1 / (1+score)
+            print(f"Result {i+1}: {doc.page_content} (Source: {doc.metadata['source']}) (Score: {score:.4f}) ) (simSRC: {simSRC:.4f})")
             print("-"*50)
     
 
 
+def metadata_filtering():
+     with tempfile.TemporaryDirectory() as tmpdir:
+
+        # create vector store from documents
+        vectorstore = Chroma.from_documents(
+            documents=SAMPLE_DOCS, embedding=embeddings_model, persist_directory=tmpdir
+        )
+        print(
+            f"Vector store created {vectorstore._collection.count()} documents and persisted."
+        )
+
+
+        query = "what databases are available?"
+        results = vectorstore.similarity_search(query, k=5)
+        for i, doc in enumerate(results):
+            print(f"Result without metadata filtering {i+1}: {doc.page_content} (Source: {doc.metadata['source']})")
+        print("-"*50)
+
+        filterCriteria = {"topic": "database"}
+        filtered_results = vectorstore.similarity_search(query, k=5, filter=filterCriteria)
+
+        for i, doc in enumerate(filtered_results):
+            print(f"Result with metadata filtering {i+1}: {doc.page_content} (Source: {doc.metadata['source']})")
+
+    
+
 def main():
     # chroma_basics()
-    similarity_search_with_scores()
+    # similarity_search_with_scores()
+    metadata_filtering()
 
 
 if __name__ == "__main__":
